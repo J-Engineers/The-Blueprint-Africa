@@ -1,0 +1,54 @@
+<?php
+
+namespace App\Http\Requests\Auth;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class VerifyEmail extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        return [
+            'email' => 'required|string|email',
+            'verify_token' => 'required|integer',
+            'api_key' => [
+                function ($attribute, $value, $fail)  {
+                    if(!$value OR $value != env('API_KEY')){
+                        $fail("Invalid API KEY");
+                    }
+                }
+            ]
+        ];
+    }
+
+    /**
+     * Custom message for validation
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'email.required' => 'Email is required!',
+            'email.string' => 'Email must be a string',
+            'email.email' => 'Email must be a valid email address',
+            'verify_token.required' => 'Verification Token is required!',
+            'verify_token.string' => 'Verification Token must be a string',
+            'api_key.required' => 'API Key is required!',
+            'api_key.string' => 'API Key must be a string',
+        ];
+    }
+}
