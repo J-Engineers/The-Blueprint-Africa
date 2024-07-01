@@ -28,7 +28,7 @@ class AdminController extends Controller
             ], Response::HTTP_NOT_FOUND);
         }
 
-        $users = User::where('verify_email', '=', 1)->select('email', 'firstname', 'lastname', 'phone', 'user_type')->limit(100)->get();
+        $users = User::where('verify_email', '=', 1)->select('email', 'first_name', 'last_name', 'phone', 'user_type', 'id', 'photo')->limit(100)->get();
 
         return response()->json([
             'status_code' => Response::HTTP_OK,
@@ -49,7 +49,7 @@ class AdminController extends Controller
             ], Response::HTTP_NOT_FOUND);
         }
 
-        $search_user = User::where('id', $request->user_id)->select('email', 'firstname', 'lastname', 'phone', 'user_type')->first();
+        $search_user = User::where('id', $request->user_id)->select('email', 'first_name', 'last_name', 'phone', 'user_type', 'id', 'photo')->first();
 
         return response()->json([
             'status_code' => Response::HTTP_OK,

@@ -9,7 +9,6 @@ use Illuminate\Notifications\Notifiable;
 
 class AccessToken extends Model
 {
-    use HasFactory;
 
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -21,6 +20,7 @@ class AccessToken extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'id',
         'tokenable_id',
     ];
 

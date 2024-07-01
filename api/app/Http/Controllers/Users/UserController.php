@@ -8,6 +8,7 @@ use App\Http\Requests\Users\GetDetails;
 use App\Http\Requests\Users\UpdatePhoto;
 use App\Http\Requests\Users\UpdateDetails;
 use App\Http\Requests\Users\ChangePassword;
+use App\Http\Requests\Users\WalletToken;
 use Storage;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,6 +56,22 @@ class UserController extends Controller
             'last_name' => $request->last_name,
             'gender' => $request->gender,
             'address' => $request->address
+        ]);
+
+        return response()->json([
+            'status_code' => Response::HTTP_OK,
+            'status' => 'success',
+            'message' => 'Profile Updated',
+            'data' => $user
+        ], Response::HTTP_OK);
+    }
+
+    public function updateWalletToken(WalletToken $request){
+        $request->validated();
+        $auth = auth()->user()->id;
+        $user = User::where('id', $auth)->first();
+        $user->update([
+            'wallet_token' => $request->token,
         ]);
 
         return response()->json([

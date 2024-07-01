@@ -14,6 +14,11 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         //
+        $middleware->alias([
+            'ActiveUser' => \App\Http\Middleware\ActiveUser::class,
+            'DiscountMiddleware' => \App\Http\Middleware\DiscountMiddleware::class,
+            'BPMiddleware' => \App\Http\Middleware\BPMiddleware::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

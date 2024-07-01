@@ -27,6 +27,7 @@ class Register extends FormRequest
             'user_name' => 'required|string',
             'phone' => 'required|string',
             'org_id' => 'required|string',
+            'referredby_user_id' => 'required',
             'api_key' => [
                 function ($attribute, $value, $fail)  {
                     if(!$value OR $value != env('API_KEY')){
@@ -59,6 +60,7 @@ class Register extends FormRequest
             'user_name.string' => 'Username must be a string',
             'phone.required' => 'Phone Number is required!',
             'phone.string' => 'Phone Number must be a string',
+            'referredby_user_id.required' => 'This field is required and can be null'
         ];
     }
 }

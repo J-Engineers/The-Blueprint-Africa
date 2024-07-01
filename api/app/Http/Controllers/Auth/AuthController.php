@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\Auth\VerifyEmail;
 use App\Http\Requests\Auth\ResetPassword;
 use App\Http\Requests\Auth\ForgotPassword;
+use App\Models\Courses\Referral;
 
 class AuthController extends Controller
 {
@@ -113,14 +114,7 @@ class AuthController extends Controller
 
         $request->validated();
 
-
-        if($request->org_id !== env('ORG_ID', "swatCat5MikrotikZssHr5Sha255")){
-            return response()->json([
-                'status_code' => Response::HTTP_UNAUTHORIZED,
-                'status' => 'error',
-                'message' => 'Invalid Request',
-            ], Response::HTTP_UNAUTHORIZED);
-        }
+    
 
 
         // Attempt to find the user by email
@@ -158,9 +152,10 @@ class AuthController extends Controller
             ], Response::HTTP_NOT_FOUND);
         }
 
+    
         $password= Hash::make($request->password);
         $user = User::create([
-            'uuid' => (string)Str::uuid(),
+            'id' => (string)Str::uuid(),
             'user_name' => $request->user_name,
             'email' => $request->email,
             'is_admin' => false,
@@ -168,14 +163,22 @@ class AuthController extends Controller
             'password' => $password,
             'phone' => $request->phone,
             'verify_token' => $verify_token,
-            'verify_email' => false,
-            'user_type' => 'admin',
+            'verify_email' => true,
+            'referredby_user_id' => $request->referredby_user_id,
+            'user_type' => 'user',
+            'wallet_token' => mt_rand(100000, 999999)
         ]);
+
+        Referral::create(
+            ['id' => (string)Str::uuid(), 'user_id' => $user->id]
+        );
 
         if(auth()->user()){
             auth()->user()->tokens()->delete();
         }
 
+        AccessToken::where('tokenable_id', $user->id)->delete();
+        $token = $user->createToken($request->email)->plainTextToken; // Creating access_token
         return response()->json(
             [
                 'status_code' => Response::HTTP_CREATED,
@@ -189,6 +192,7 @@ class AuthController extends Controller
                     "is_admin" => $user->is_admin ? true : false,
                     "verification" => $user->verify_email ? true : false,
                     "user_type" => $user->user_type,
+                    "access_token" => $token
                 ]
             ], Response::HTTP_CREATED
         );
@@ -264,10 +268,13 @@ class AuthController extends Controller
             ], Response::HTTP_NOT_FOUND);
         }
 
-        $user->update(['verify_email' => true, 'verify_token' => 0, 'email_verified_at' => Carbon::now()]);
+        $user->update(['verify_email' => true, 'verify_token' => 0, 'email_verified_at' => now()]);
+
+        
 
         AccessToken::where('tokenable_id', $user->id)->delete();
         $token = $user->createToken($request->email)->plainTextToken; // Creating access_token
+        
          
         return response()->json([
            'status_code' => Response::HTTP_OK,
@@ -377,6 +384,7 @@ class AuthController extends Controller
 
 
         PasswordResetToken::create([
+            'id' => (string)Str::uuid(),
             'email' => $request->email,
             'token' => $otp
         ]);

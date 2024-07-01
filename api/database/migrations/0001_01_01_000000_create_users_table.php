@@ -23,13 +23,17 @@ return new class extends Migration
             $table->integer('verify_token');
             $table->boolean('verify_email');
             $table->string('user_type');
+            $table->string('wallet_bp_balance')->nullable();
+            $table->string('wallet_token')->nullable();
+            $table->string('referredby_user_id')->nullable();
+            $table->string('referral_link')->nullable();
+            $table->string('referral_bp_balance')->nullable();
             $table->string('title')->nullable();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
             $table->string('address')->nullable();
             $table->string('gender')->nullable();
             $table->string('photo')->nullable();
-            $table->rememberToken();
             $table->timestamps();
         });
 
@@ -41,7 +45,8 @@ return new class extends Migration
 
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
+            $table->uuid('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade')->nullable()->index();
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
             $table->longText('payload');

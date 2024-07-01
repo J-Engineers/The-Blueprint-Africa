@@ -1,0 +1,51 @@
+networks:
+  proxy:
+    external: true
+  laravel:
+
+services:
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: nginx
+    ports:
+      - 8080:80
+    networks:
+      - laravel
+    depends_on:
+      - php-fpm
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    
+  
+  mysql_db:
+    image: mysql:latest
+    container_name: mysql_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345
+      MYSQL_DATABASE: blueprint
+    ports:
+      - 4306:3306
+    networks:
+      - laravel
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin
+    ports:
+      - 9001:80
+    environment:
+      - PMA_ARBITRARY=1
+    networks:
+      - laravel
+
+  php-fpm:
+    build: .
+    container_name: phpcontainer
+    networks:
+      - laravel
+    volumes:
+      - ./api:/var/www/html
+    working_dir: /var/www/html
+
