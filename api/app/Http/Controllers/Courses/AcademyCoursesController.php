@@ -140,19 +140,23 @@ class AcademyCoursesController extends Controller
     public function show(AcademyCourses $academyCourses, Request $request)
     {
 
-        $courses = $academyCourses::where('id', $request->course_id)->first();
-
+        $course = $academyCourses::where('id', $request->course_id)->first();
+        if(!$course){
+            return response()->json([
+                'status_code' => Response::HTTP_NOT_FOUND,
+                'status' => 'error',
+                'message' => 'Course Not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
         if($request->is_discount == true){
-            foreach($courses as $course){
-                $course->price = $course->price * ($course->discount_rate / 100);
-            }
+            $course->price = $course->price * ($course->discount_rate / 100);
         }
 
         return response()->json([
             'status_code' => Response::HTTP_OK,
             'status' => 'success',
             'message' => 'Course Found',
-            'data' => ['course' => $courses, 'scholarship' => $request->is_discount]
+            'data' => ['course' => $course, 'scholarship' => $request->is_discount]
         ], Response::HTTP_OK);
     }
 
