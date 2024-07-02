@@ -113,6 +113,13 @@ class DiscountsController extends Controller
         $request->validated();
 
         $course = $discounts::where('id', $request->scholarship_id)->first();
+        if(!$course){
+            return response()->json([
+                'status_code' => Response::HTTP_NOT_FOUND,
+                'status' => 'error',
+                'message' => 'Scholarship Not Found'
+            ], Response::HTTP_NOT_FOUND);
+        }
         $course->update([
             'discounts' => $request->discounts
 

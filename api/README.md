@@ -10,11 +10,11 @@
 ## About Laravel
 Hosted Documentation
 
-https://www.postman.com/red-meadow-5256/workspace/red-meadow-5256-s-public-workspace/collection/10053626-bbb5e489-499f-4ebc-84cd-71575ce123aa?action=share&creator=10053626
+https://red-meadow-5256.postman.co/workspace/red-meadow-5256's-Public-Worksp~97bf09af-7089-4f46-9056-9a9bc2b6c4d3/collection/10053626-bbb5e489-499f-4ebc-84cd-71575ce123aa
 
 Hosted API
 
-http://blueprint.jengineers.com.ng/api/
+https://blueprint.phenom.ng
 
 
 Hosted Repository

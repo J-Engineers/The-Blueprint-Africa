@@ -27,6 +27,13 @@ class BPController extends Controller
         }
 
         $discount = BP::all();
+         if(!$discount){
+            return response()->json([
+                'status_code' => Response::HTTP_NOT_FOUND,
+                'status' => 'error',
+                'message' => 'Course Not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
         return response()->json([
             'status_code' => Response::HTTP_OK,
             'status' => 'success',
@@ -95,6 +102,7 @@ class BPController extends Controller
         }
 
         $search_user = $bP::where('id', $request->bp_id)->first();
+        
 
         return response()->json([
             'status_code' => Response::HTTP_OK,
@@ -129,6 +137,13 @@ class BPController extends Controller
         $request->validated();
 
         $course = $bP::where('id', $request->bp_id)->first();
+         if(!$course){
+            return response()->json([
+                'status_code' => Response::HTTP_NOT_FOUND,
+                'status' => 'error',
+                'message' => 'bp Not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
         $course->update([
             'rate' => $request->rate
 

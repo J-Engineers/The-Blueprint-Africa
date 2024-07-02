@@ -34,6 +34,13 @@ class PaymentDetailsController extends Controller
                 ['account_number', '!=', '0']
             ]
         )->get();
+        if(!$query_response && $query_response->isEmpty()){
+            return response()->json([
+                'status_code' => Response::HTTP_NOT_FOUND,
+                'status' => 'error',
+                'message' => 'Payment Details Not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
 
         foreach($query_response as $query_response_data){
             $data = new Helpers();
@@ -165,6 +172,13 @@ class PaymentDetailsController extends Controller
                 ['user_id', '=', $request->user_id]
             ]
         )->get();
+         if(!$query_response && $query_response->isEmpty()){
+            return response()->json([
+                'status_code' => Response::HTTP_NOT_FOUND,
+                'status' => 'error',
+                'message' => 'Payment Details Not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
         foreach($query_response as $query_response_data){
             $data = new Helpers();
             $query_response_data->user = $data->user($query_response_data->user_id);

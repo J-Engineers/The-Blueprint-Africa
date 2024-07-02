@@ -47,6 +47,14 @@ class ReferralController extends Controller
                 'u.id as user_id', 'r.id as referral_id'
             )
             ->get();
+            
+        if(!$referral && $referral->isEmpty()){
+            return response()->json([
+                'status_code' => Response::HTTP_NOT_FOUND,
+                'status' => 'error',
+                'message' => 'No referral  found'
+            ], Response::HTTP_NOT_FOUND);
+        }
 
         foreach ($referral as $referral_value) {
             $reffered = DB::table('users As u')
@@ -96,6 +104,14 @@ class ReferralController extends Controller
                 'u.id as user_id'
             )
             ->get();
+            
+            if(!$referral && $referral->isEmpty()){
+            return response()->json([
+                'status_code' => Response::HTTP_NOT_FOUND,
+                'status' => 'error',
+                'message' => 'No referral  found'
+            ], Response::HTTP_NOT_FOUND);
+        }
 
         foreach ($referral as $referral_value) {
             $reffered = DB::table('users As u')

@@ -37,6 +37,13 @@ class SubscribeController extends Controller
         }
 
         $query_response = Subscribe::all();
+        if(!$query_response && $query_response->isEmpty()){
+            return response()->json([
+                'status_code' => Response::HTTP_NOT_FOUND,
+                'status' => 'error',
+                'message' => 'Subscribers not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
 
         $data = new Helpers();
         foreach($query_response as $query_response_data){
@@ -151,6 +158,13 @@ class SubscribeController extends Controller
         }else{
             $real_courses = AcademyCourses::where('id', $request->course_id)->first();
 
+        }
+        if(!$real_courses){
+            return response()->json([
+                'status_code' => Response::HTTP_NOT_FOUND,
+                'status' => 'error',
+                'message' => 'course not found'
+            ], Response::HTTP_NOT_FOUND);
         }
 
         $payment_amount = $real_courses->price;
@@ -393,6 +407,14 @@ class SubscribeController extends Controller
         }else{
             $real_courses = AcademyCourses::where('id', $request->course_id)->first();
 
+        }
+        
+        if(!$real_courses){
+            return response()->json([
+                'status_code' => Response::HTTP_NOT_FOUND,
+                'status' => 'error',
+                'message' => 'course not found'
+            ], Response::HTTP_NOT_FOUND);
         }
 
         $course_price = $real_courses->price;

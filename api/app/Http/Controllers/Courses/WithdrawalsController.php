@@ -36,6 +36,13 @@ class WithdrawalsController extends Controller
                 ['bp', '!=', '0']
             ]
         )->get();
+        if(!$query_response && $query_response->isEmpty()){
+            return response()->json([
+                'status_code' => Response::HTTP_NOT_FOUND,
+                'status' => 'error',
+                'message' => 'withdrawal not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
 
         foreach($query_response as $query_response_data){
             $data = new Helpers();
@@ -98,6 +105,7 @@ class WithdrawalsController extends Controller
             'user_id' => $user->id,
             'otp' => $otp
         ]);
+        
 
         $data = new Helpers();
         $query_response->user = $data->user($query_response->user_id);
@@ -205,7 +213,7 @@ class WithdrawalsController extends Controller
                 ['user_id', '=', $request->user_id]
             ]
         )->get();
-        if($query_response && count($query_response) < 1){
+        if(!$query_response && $query_response->isEmpty()){
             return response()->json([
                 'status_code' => Response::HTTP_NOT_FOUND,
                 'status' => 'error',
@@ -244,7 +252,7 @@ class WithdrawalsController extends Controller
 
             ]
         )->get();
-        if($query_response && count($query_response) < 1){
+        if(!$query_response && $query_response->isEmpty()){
             return response()->json([
                 'status_code' => Response::HTTP_NOT_FOUND,
                 'status' => 'error',
@@ -276,7 +284,7 @@ class WithdrawalsController extends Controller
                 ['user_id', '=', $user->id]
             ]
         )->get();
-        if($query_response && count($query_response) < 1){
+        if($query_response && $query_response->isEmpty()){
             return response()->json([
                 'status_code' => Response::HTTP_NOT_FOUND,
                 'status' => 'error',
@@ -309,7 +317,7 @@ class WithdrawalsController extends Controller
 
             ]
         )->get();
-        if($query_response && count($query_response) < 1){
+        if($query_response && $query_response->isEmpty()){
             return response()->json([
                 'status_code' => Response::HTTP_NOT_FOUND,
                 'status' => 'error',

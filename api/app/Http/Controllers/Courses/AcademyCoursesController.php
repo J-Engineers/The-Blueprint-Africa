@@ -21,11 +21,20 @@ class AcademyCoursesController extends Controller
     {
        
         $courses = AcademyCourses::all();
+         if(!$courses){
+            return response()->json([
+                'status_code' => Response::HTTP_NOT_FOUND,
+                'status' => 'error',
+                'message' => 'Course Not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
         
 
         if($request->is_discount == true){
             foreach($courses as $course){
                 $course->price = $course->price * ($course->discount_rate / 100);
+                $course->course_type = 'academy';
+
             }
         }
 
@@ -150,6 +159,8 @@ class AcademyCoursesController extends Controller
         }
         if($request->is_discount == true){
             $course->price = $course->price * ($course->discount_rate / 100);
+            $course->course_type = 'academy';
+
         }
 
         return response()->json([
@@ -220,6 +231,13 @@ class AcademyCoursesController extends Controller
         $base_path1 = $disk->url($filePath);
 
         $course = $academyCourses::where('id', $request->course_id)->first();
+         if(!$course){
+            return response()->json([
+                'status_code' => Response::HTTP_NOT_FOUND,
+                'status' => 'error',
+                'message' => 'Course Not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
         $course->update([
             'name' => $request->name,
             'description' => $request->description,

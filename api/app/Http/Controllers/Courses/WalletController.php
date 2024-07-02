@@ -34,6 +34,14 @@ class WalletController extends Controller
         }
 
         $query_response = Wallet::all();
+        if(!$query_response && $query_response->isEmpty()){
+            return response()->json([
+                'status_code' => Response::HTTP_NOT_FOUND,
+                'status' => 'error',
+                'message' => 'payment not found'
+            ], Response::HTTP_NOT_FOUND);
+        }
+        
         $data = new Helpers();
         foreach($query_response as $query_response_data){
             $query_response_data->user = $data->user($query_response_data->user_id);
